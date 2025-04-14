@@ -33,23 +33,6 @@ resource "aws_subnet" "ecs_private_subnet" {
   }
 }
 
-//Creates Elastic IP
-resource "aws_eip" "nat_elastic_ip" {
-  domain = "vpc"
-}
-
-//Creates  a NAT Gateway for private subnet
-resource "aws_nat_gateway" "nat_gateway" {
-  depends_on    = [aws_eip.nat_elastic_ip]
-  allocation_id = aws_eip.nat_elastic_ip.id
-  subnet_id     = aws_subnet.ecs_public_subnet.id
-
-  tags = {
-    Name = "nat_gateway"
-  }
-}
-
-
 //Creates an Internet Gateway
 resource "aws_internet_gateway" "ecs_ig" {
   vpc_id = aws_vpc.ecs_vpc.id
@@ -75,12 +58,6 @@ resource "aws_route_table" "public_route_table" {
 
 resource "aws_route_table" "private_route_table" {
   vpc_id     = aws_vpc.ecs_vpc.id
-  depends_on = [aws_nat_gateway.nat_gateway]
-
-  route {
-    cidr_block = local.aws_route_table_private_cidr
-    gateway_id = aws_nat_gateway.nat_gateway.id
-  }
 
   tags = {
     Name = local.aws_route_table_private_name
