@@ -9,3 +9,9 @@ variable "aws_az" {
   type        = string
   default     = "us-east-1a"
 }
+
+variable "aws_ecr_repository_url" {
+  description = "aws_ecr_repository"
+  type        = string
+  default     = "public.ecr.aws/nginx/nginx:stable-perl"
+}

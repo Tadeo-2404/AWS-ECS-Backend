@@ -6,7 +6,7 @@ locals {
   aws_public_subnet_cidr_block  = "10.0.1.0/24"
   aws_private_subnet_cidr_block = "10.0.2.0/24"
   //AWS INTERNET GATEWAY
-  aws_internet_gateway_name = "post-igw"
+  aws_internet_gateway_name = "ecs_ig"
   //AWS ROUTE TABLE
   aws_route_table_public_name  = "public_route_table"
   aws_route_table_public_cidr  = "0.0.0.0/0"

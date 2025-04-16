@@ -6,35 +6,40 @@ resource "aws_security_group" "ecs_sg" {
   description = local.aws_security_group_description
   vpc_id      = var.aws_vpc_id
 
-  # SSH Rule
-  ingress {
-    description = "Allow SSH access"
-    protocol    = local.aws_security_group_ingress_ssh_protocol
-    from_port   = local.aws_security_group_ingress_ssh_from_port
-    to_port     = local.aws_security_group_ingress_ssh_to_port
-    cidr_blocks = [local.aws_security_group_ingress_ssh_cdir]
-  }
-
-  # Allow ICMP (ping) traffic
-  ingress {
-    description = "Allow ICMP traffic"
-    protocol    = local.aws_security_group_ingress_icmp_protocol
-    from_port   = local.aws_security_group_ingress_icmp_from_port
-    to_port     = local.aws_security_group_ingress_icmp_to_port
-    cidr_blocks = [local.aws_security_group_ingress_icmp_cdir]
-  }
-
-
-  # Egress Rule - Allow all outbound traffic
-  egress {
-    description = "Allow all outbound traffic"
-    protocol    = local.aws_security_group_egress_protocol
-    from_port   = local.aws_security_group_egress_from_port
-    to_port     = local.aws_security_group_egress_to_port
-    cidr_blocks = [local.aws_security_group_egress_cidr]
-  }
-
   tags = {
     Name = local.aws_security_group_tag_name
   }
+}
+
+//INGRESS FOR SSH
+resource "aws_vpc_security_group_ingress_rule" "ecs_sg_ssh" {
+  security_group_id = aws_security_group.ecs_sg.id
+  cidr_ipv4         = var.aws_vpc_cidr_block
+  from_port         = local.aws_security_group_ingress_ssh_from_port
+  to_port           = local.aws_security_group_ingress_ssh_to_port
+  ip_protocol       = local.aws_security_group_ingress_ssh_protocol
+}
+
+//INGRESS FOR HTTP
+resource "aws_vpc_security_group_ingress_rule" "ecs_sg_http" {
+  security_group_id = aws_security_group.ecs_sg.id
+  cidr_ipv4         = var.aws_vpc_cidr_block
+  from_port         = local.aws_security_group_ingress_http_from_port
+  to_port           = local.aws_security_group_ingress_http_to_port
+  ip_protocol       = local.aws_security_group_ingress_http_protocol
+}
+
+//INGRESS FOR HTTPS
+resource "aws_vpc_security_group_ingress_rule" "ecs_sg_https" {
+  security_group_id = aws_security_group.ecs_sg.id
+  cidr_ipv4         = var.aws_vpc_cidr_block
+  from_port         = local.aws_security_group_ingress_https_from_port
+  to_port           = local.aws_security_group_ingress_https_to_port
+  ip_protocol       = local.aws_security_group_ingress_https_protocol
+}
+
+resource "aws_vpc_security_group_egress_rule" "ecs_sg_egress" {
+  security_group_id = aws_security_group.ecs_sg.id
+  cidr_ipv4         = local.aws_security_group_egress_cidr
+  ip_protocol       = local.aws_security_group_egress_protocol
 }

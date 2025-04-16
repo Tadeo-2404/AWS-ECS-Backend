@@ -57,7 +57,7 @@ resource "aws_route_table" "public_route_table" {
 }
 
 resource "aws_route_table" "private_route_table" {
-  vpc_id     = aws_vpc.ecs_vpc.id
+  vpc_id = aws_vpc.ecs_vpc.id
 
   tags = {
     Name = local.aws_route_table_private_name
